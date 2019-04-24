@@ -1,10 +1,12 @@
 // Dependencies
 var express = require("express");
-var mongojs = require("mongojs");
+// var mongojs = require("mongojs");
 // Require axios and cheerio. This makes the scraping possible
 var axios = require("axios");
 var cheerio = require("cheerio");
 var logger = require("morgan");
+var mongoose = require('mongoose');
+var db = require('./models');
 
 // Initialize Express
 var app = express();
@@ -17,25 +19,18 @@ app.use(express.json());
 // Make public a static folder
 app.use(express.static("public"));
 
-// Database configuration
-var databaseUrl = "scraper";
-var collections = ["scrapedData"];
-
-// Hook mongojs configuration to the db variable
-var db = mongojs(databaseUrl, collections);
-db.on("error", function(error) {
-  console.log("Database Error:", error);
-});
+// Connect to the Mongo DB
+mongoose.connect("mongodb://localhost/newsScraper", { useNewUrlParser: true });
 
 // Main route (simple Hello World Message)
 app.get("/", function(req, res) {
-  res.send("Hello world");
+  res.send(index.html);
 });
 
 // Retrieve data from the db
 app.get("/all", function(req, res) {
   // Find all results from the scrapedData collection in the db
-  db.scrapedData.find({}, function(error, found) {
+  db.Article.find({}, function(error, found) {
     // Throw any errors to the console
     if (error) {
       console.log(error);
@@ -55,36 +50,43 @@ app.get("/scrape", function(req, res) {
     // Load the html body from axios into cheerio
     var $ = cheerio.load(response.data);
     // For each element with a "title" class
-    $("h2.feed-article__title").each(function(i, element) {
+    $(".feed-article").each(function(i, element) {
       // Save the text and href of each link enclosed in the current element
-      var title = $(element).text();
-      var link = $(element).parent().attr("href");
+      // var title = $(element).text();
+      // var link = $(element).parent().attr("href");
+      // var image =  $(element).siblings('img').attr('src');
+
+      const title = $(element).find('.feed-article__title').text();
+      const link = $(element).find('.feed-article__info').attr('href');
+      const image = $(element).find('.grid-article__img').attr('src');
 
       results.push({
           title: title,
-          link: link
+          link: link,
+          image: image
       })
 
       console.log(results);
 
-    //   // If this found element had both a title and a link
-    //   if (title && link) {
-    //     // Insert the data in the scrapedData db
-    //     db.scrapedData.insert({
-    //       title: title,
-    //       link: link
-    //     },
-    //     function(err, inserted) {
-    //       if (err) {
-    //         // Log the error if one is encountered during the query
-    //         console.log(err);
-    //       }
-    //       else {
-    //         // Otherwise, log the inserted data
-    //         console.log(inserted);
-    //       }
-    //     });
-    //   }
+      db.Article.findOne({
+        title: title
+      }).then(function(data){
+
+        if(data ===  null){
+          db.Article.create(results).then(function(dbArticle){
+            res.json(dbArticle);
+          })
+        }
+      }).catch(function(err){
+        res.json(err);
+      })
+
+      // db.Article.create({
+      //   title: title,
+      //   link: link,
+      //   // image: image
+
+      // })
     });
   });
 
@@ -92,6 +94,87 @@ app.get("/scrape", function(req, res) {
   res.send("Scrape Complete");
 });
 
+app.get('/articles', function(req, res){
+
+  db.Article.find({}).sort({
+    artticleCreated:-1
+  }).then(function(dbArticle){
+    res.json(dbArticle)
+  })
+  .catch(function(err){
+    res.json(err);
+  })
+})
+
+app.get('articles/:id', function(req, res){
+
+  db.Article.findOne({_id: req.params.id}).populate('note')
+  .then(function(dbArticle){
+    res.json(dbArticle);
+  })
+  .catch(function(err){
+    res.json(err);
+  })
+})
+
+app.post('/articles/:id', function(req, res){
+
+  db.Note.create(req.body)
+  .then(function(dbNote){
+    return db.Article.findOneAndUpdate({
+      _id: req.params.id
+    }, {
+      note: dbNote._id
+    },  {
+      new: true
+    });
+  })
+  .then(function(dbArticle){
+    res.json(dbArticle)
+  })
+  .catch(function(err){
+    res.json(err);
+  })
+})
+
+app.put('/saved/:id', function(req, res){
+
+  db.Article.findByIdAndUpdate({
+    _id: req.params.id
+  }, { $set: {isSaved: true}
+
+  }).then(function(dbArticle){
+    res.json(dbArticle);
+  })
+  .catch(function(err){
+    res.json(err);
+  })
+})
+
+app.get("/saved", function(req, res) {
+
+  db.Article
+    .find({ isSaved: true })
+    .then(function(dbArticle) {
+      res.json(dbArticle);
+    })
+    .catch(function(err) {
+      res.json(err);
+    });
+});
+
+// Route for deleting/updating saved article
+app.put("/delete/:id", function(req, res) {
+
+  db.Article
+    .findByIdAndUpdate({ _id: req.params.id }, { $set: { isSaved: false }})
+    .then(function(dbArticle) {
+      res.json(dbArticle);
+    })
+    .catch(function(err) {
+      res.json(err);
+    });
+});
 
 // Listen on port 3000
 app.listen(3000, function() {

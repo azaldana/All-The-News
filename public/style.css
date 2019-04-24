@@ -1,5 +1,6 @@
 .display-4{
     font-family: 'Montserrat', sans-serif;
+    font-weight: bold;
     text-transform: uppercase;
     margin: 0 auto;
     text-align: center;
@@ -10,9 +11,69 @@
 }
 
 .container {
-    width: 65%;
+    width: 80%;
 }
 
 .card {
     margin-top: 10px;
+}
+
+.footer {
+    margin-top: 50px;
+}
+
+.bg-light {
+    background-color: transparent !important;
+}
+
+.jumbotron {
+    text-align: center;
+    background-color: transparent;
+}
+
+.btn-primary {
+    background-color: orange;
+    border: 2px solid orange;
+    color: white;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 3px;
+}
+
+.btn-primary:hover {
+    background-color: #337ab7;
+}
+
+.lead {
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+.navigation {
+    border-bottom: 2px solid orange;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.navigation .navbar-brand {
+    font-size: 14px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.card {
+    font-family: 'Montserrat', sans-serif;
+}
+
+.card h5 {
+    text-transform: uppercase;
+}
+
+.card-link {
+    color: orange;
+    text-transform: uppercase;
 }
