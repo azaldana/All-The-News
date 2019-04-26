@@ -67,13 +67,19 @@
 
 .card {
     font-family: 'Montserrat', sans-serif;
+    /* height: 180px; */
 }
 
 .card h5 {
-    text-transform: uppercase;
+    font-size: 15px;
+    font-weight: bold;
 }
 
 .card-link {
     color: orange;
     text-transform: uppercase;
+}
+
+.card-body .card-title {
+    color: black;
 }
