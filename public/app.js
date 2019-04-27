@@ -54,13 +54,10 @@ $(document).on("click", ".comment", function() {
       console.log(data);
 
       $(".modal-title").append("<h5>" + data.title + "</h5>");
-      let $deleteButton = $('<button>').text('X')
-      .addClass('deleteNote');
-      let userInput = $('<div>').text();
       $(".input").append("<textarea id='bodyinput' name='body'></textarea><br>");
       $(".input").append("<button data-id='" + data._id + "' class='btn btn-secondary btn-sm' style='margin-top:20px;'data-dismiss='modal'>Close</button>");
       $(".input").append("<button data-id='" + data._id + "' id='savenote' class='btn btn-primary btn-sm' style='margin-top:20px;'data-dismiss='modal'>Save Note</button>");
-      $('.notesTypes').append('#bodyinput', $deleteButton);
+      $('#bodyinput').append('.notesTyped');
 
       // If there's a note in the article
       if (data.note) {
