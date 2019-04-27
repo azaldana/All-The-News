@@ -57,7 +57,7 @@ $(document).on("click", ".comment", function() {
       $(".input").append("<textarea id='bodyinput' name='body'></textarea><br>");
       $(".input").append("<button data-id='" + data._id + "' class='btn btn-secondary btn-sm' style='margin-top:20px;'data-dismiss='modal'>Close</button>");
       $(".input").append("<button data-id='" + data._id + "' id='savenote' class='btn btn-primary btn-sm' style='margin-top:20px;'data-dismiss='modal'>Save Note</button>");
-      $('#bodyinput').append('.notesTyped');
+      // $('#bodyinput').append('.notesTyped');
 
       // If there's a note in the article
       if (data.note) {
