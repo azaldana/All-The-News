@@ -31,9 +31,9 @@ app.use(express.static("public"));
 mongoose.connect("mongodb://localhost/newsScraper", { useNewUrlParser: true });
 
 // If deployed, use the deployed database. Otherwise use the local mongoHeadlines database
-// var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/mongoHeadlines";
+var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/mongoHeadlines";
 
-// mongoose.connect(MONGODB_URI);
+mongoose.connect(MONGODB_URI);
 
 
 // Routes
@@ -56,7 +56,7 @@ app.get("/scrape", function(req, res) {
         const link = $(element).find('.media-heading').children('a').attr("href");
         const articleCreated = moment().format("YYYY MM DD hh:mm:ss");
         const image = $(element).find('.inner-container').children('img').attr('src');
-        const summary = $(element).find('.summary').text();
+        const summary = $(element).find('.summary').text().trim();
   
         const result = {
           image: image,
@@ -133,6 +133,8 @@ app.post("/articles/:id", function(req, res) {
       res.json(err);
     });
 });
+
+
 
 // Start the server
 app.listen(PORT, function() {
