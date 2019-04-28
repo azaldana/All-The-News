@@ -72,6 +72,7 @@ $(document).on("click", ".comment", function() {
 $(document).on("click", "#savenote", function() {
   // Grab the id associated with the article from the submit button
   var thisId = $(this).attr("data-id");
+  var userinput = $('#bodyinput').val();
 
   // Run a POST request to change the note, using what's entered in the inputs
   $.ajax({
@@ -79,7 +80,7 @@ $(document).on("click", "#savenote", function() {
     url: "/articles/" + thisId,
     data: {
       // Value taken from note textarea
-      body: $('#bodyinput').val()
+      body: userinput
     }
   })
   
@@ -88,7 +89,7 @@ $(document).on("click", "#savenote", function() {
       console.log("This is the data", data);
     
       var $div = $('<div class="comments">');
-      var $span = $('<span data-id="' + data._id + 'id="note-id">' + data.body + '<button id="delete">x</button></span>');
+      var $span = $('<span data-id="' + data._id + 'id="note-id">' + userinput + '<button id="delete">x</button></span>');
       // $span.append('#bodyinput');
       $div.append($span);
       $('.modal-body').prepend($div);
