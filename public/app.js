@@ -89,7 +89,7 @@ $(document).on("click", "#savenote", function() {
       console.log("This is the data", data);
     
       var $div = $('<div class="comments">');
-      var $span = $('<span data-id="' + data._id + 'id="note-id">' + userinput + '<button id="delete">x</button></span>');
+      var $span = $('<span data-id="' + data._id + 'id="note-id">' + userinput + '<button id="delete">x</button>' + '<br>' + '<hr></span>');
       // $span.append('#bodyinput');
       $div.append($span);
       $('.modal-body').prepend($div);
