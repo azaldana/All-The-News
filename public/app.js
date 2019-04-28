@@ -51,31 +51,27 @@ $(document).on("click", ".comment", function() {
   })
     // With that done, add the note information to the page
     .done(function(data) {
-      console.log(data);
+      console.log(data);      
 
       $(".modal-title").append("<h5>" + data.title + "</h5>");
       $(".input").append("<textarea id='bodyinput' name='body'></textarea><br>");
       $(".input").append("<button data-id='" + data._id + "' class='btn btn-secondary btn-sm' style='margin-top:20px;'data-dismiss='modal'>Close</button>");
-      $(".input").append("<button data-id='" + data._id + "' id='savenote' class='btn btn-primary btn-sm' style='margin-top:20px;'data-dismiss='modal'>Save Note</button>");
-      // $('#bodyinput').append('.notesTyped');
+      $(".input").append("<button data-id='" + data._id + "' id='savenote' class='btn btn-primary btn-sm' style='margin-top:20px;'data-dismiss='modal'>Save Comment</button>");
 
       // If there's a note in the article
       if (data.note) {
         // Place the body of the note in the body textarea
-        $("#bodyinput").val(data.note.body);
+        $(".modal-body").val(data.note.body);
 
         console.log(data.note);
       }
     });
 });
 
-
-
 // When you click the Save Note button
 $(document).on("click", "#savenote", function() {
   // Grab the id associated with the article from the submit button
   var thisId = $(this).attr("data-id");
-  // console.log(thisId);
 
   // Run a POST request to change the note, using what's entered in the inputs
   $.ajax({
@@ -83,15 +79,20 @@ $(document).on("click", "#savenote", function() {
     url: "/articles/" + thisId,
     data: {
       // Value taken from note textarea
-      body: $("#bodyinput").val()
+      body: $('#bodyinput').val()
     }
   })
   
     .done(function(data) {
       // Log the response
-      console.log(data);
-      // Empty the notes section
-      // $("#bodyinput").empty();
+      console.log("This is the data", data);
+    
+      var $div = $('<div class="comments">');
+      var $span = $('<span data-id="' + data._id + 'id="note-id">' + data.body + '<button id="delete">x</button></span>');
+      // $span.append('#bodyinput');
+      $div.append($span);
+      $('.modal-body').prepend($div);
+
     });
 
   // Remove the values entered in the input and textarea for note entry
