@@ -36,8 +36,9 @@ $.getJSON("/articles", function (data) {
   }
 });
 
-$(document).on("click", ".comment", function() {
-  
+// When you click the Note button
+$(document).on("click", ".comment", function () {
+
   $(".modal-title").empty();
   $(".input").empty();
 
@@ -50,29 +51,27 @@ $(document).on("click", ".comment", function() {
     url: "/articles/" + thisId
   })
     // With that done, add the note information to the page
-    .done(function(data) {
-      console.log(data);      
+    .done(function (data) {
+      console.log(data);
 
       $(".modal-title").append("<h5>" + data.title + "</h5>");
-      $(".input").append("<textarea id='bodyinput' name='body'></textarea><br>");
-      $(".input").append("<button data-id='" + data._id + "' class='btn btn-secondary btn-sm' style='margin-top:20px;'data-dismiss='modal'>Close</button>");
-      $(".input").append("<button data-id='" + data._id + "' id='savenote' class='btn btn-primary btn-sm' style='margin-top:20px;'data-dismiss='modal'>Save Comment</button>");
-
-      // If there's a note in the article
+    
       if (data.note) {
-        // Place the body of the note in the body textarea
-        $(".modal-body").val(data.note.body);
-
-        console.log(data.note);
+        $(".commentSection").append("<b>Previous Comments:</b><br><span id='note-span'>" + data.note.body + "<button data-id='" + data.note._id + "' id='deletenote' class='btn btn-outline-dark btn-sm' data-dismiss='modal'>X</button>" + "<br><hr></span>");
       }
+      $(".input").append("<textarea id='bodyinput' name='body'></textarea>");
+      // $(".input").append("<button data-id='" + data._id + "' id='savenote' class='btn btn-outline-dark btn-sm' style='margin-top:20px;'data-dismiss='modal'>Save Note</button><br><hr>");
+      $(".input").append("<button data-id='" + data._id + "' class='btn btn-secondary btn-sm' style='margin-top:20px;'data-dismiss='modal'>Close</button>");
+      $(".input").append("<button data-id='" + data._id + "' id='savenote' class='btn btn-primary btn-sm' style='margin-top:20px;'data-dismiss='modal'>Save Comment</button><br><hr>");
+
     });
 });
 
 // When you click the Save Note button
-$(document).on("click", "#savenote", function() {
+$(document).on("click", "#savenote", function () {
   // Grab the id associated with the article from the submit button
   var thisId = $(this).attr("data-id");
-  var userinput = $('#bodyinput').val();
+  console.log(thisId);
 
   // Run a POST request to change the note, using what's entered in the inputs
   $.ajax({
@@ -80,20 +79,42 @@ $(document).on("click", "#savenote", function() {
     url: "/articles/" + thisId,
     data: {
       // Value taken from note textarea
-      body: userinput
+      body: $("#bodyinput").val()
     }
   })
-  
-    .done(function(data) {
-      // Log the response
-      console.log("This is the data", data);
-    
-      var $div = $('<div class="comments">');
-      var $span = $('<span data-id="' + data._id + 'id="note-id">' + userinput + '<button id="delete">x</button>' + '<br>' + '<hr></span>');
-      // $span.append('#bodyinput');
-      $div.append($span);
-      $('.modal-body').prepend($div);
 
+    .done(function (data) {
+      // Log the response
+      console.log(data);
+      // Empty the notes section
+      // $("#bodyinput").empty();
+    });
+
+  // Remove the values entered in the input and textarea for note entry
+  $("#bodyinput").val("");
+});
+
+// When you click the Delete Note button
+$(document).on("click", "#deletenote", function () {
+  // Grab the id associated with the article from the submit button
+  var thisId = $(this).attr("data-id");
+  console.log(thisId);
+
+  // Run a POST request to change the note, using what's entered in the inputs
+  $.ajax({
+    method: "POST",
+    url: "/delete/" + thisId,
+    data: {
+      // Value taken from note textarea
+      body: $("#bodyinput").val()
+    }
+  })
+
+    .done(function (data) {
+      // Log the response
+      console.log(data);
+      // Empty the notes section
+      // $("#bodyinput").empty();
     });
 
   // Remove the values entered in the input and textarea for note entry

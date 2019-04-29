@@ -135,6 +135,16 @@ app.post("/articles/:id", function(req, res) {
     });
 });
 
+// Route for saving/updating an Article's associated Note
+app.post("/delete/:id", function(req, res) {
+
+
+  db.Note.deleteOne({ _id: req.params.id }, function (err) {
+    if (err) return handleError(err);
+    // deleted at most one tank document
+  });
+});
+
 // Start the server
 app.listen(PORT, function() {
   console.log("App running on port " + PORT + "!");
