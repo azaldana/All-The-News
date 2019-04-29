@@ -1,6 +1,6 @@
 // When you click the Fetch button
 $(document).on("click", ".btn-fetch", function () {
-  alert('Articles up-to-date!');
+  // alert('Articles up-to-date!');
 
   $.ajax({
     method: "GET",
