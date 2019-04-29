@@ -41,6 +41,7 @@ $(document).on("click", ".comment", function () {
 
   $(".modal-title").empty();
   $(".input").empty();
+  $(".commentSection").empty();
 
   // Save the id from .btn-note
   var thisId = $(this).attr("data-id");
@@ -60,7 +61,6 @@ $(document).on("click", ".comment", function () {
         $(".commentSection").append("<b>Previous Comments:</b><br><span id='note-span'>" + data.note.body + "<button data-id='" + data.note._id + "' id='deletenote' class='btn btn-outline-dark btn-sm' data-dismiss='modal'>X</button>" + "<br><hr></span>");
       }
       $(".input").append("<textarea id='bodyinput' name='body'></textarea>");
-      // $(".input").append("<button data-id='" + data._id + "' id='savenote' class='btn btn-outline-dark btn-sm' style='margin-top:20px;'data-dismiss='modal'>Save Note</button><br><hr>");
       $(".input").append("<button data-id='" + data._id + "' class='btn btn-secondary btn-sm' style='margin-top:20px;'data-dismiss='modal'>Close</button>");
       $(".input").append("<button data-id='" + data._id + "' id='savenote' class='btn btn-primary btn-sm' style='margin-top:20px;'data-dismiss='modal'>Save Comment</button><br><hr>");
 
