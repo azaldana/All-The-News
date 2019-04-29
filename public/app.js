@@ -56,9 +56,9 @@ $(document).on("click", ".comment", function () {
       console.log(data);
 
       $(".modal-title").append("<h5>" + data.title + "</h5>");
-    
-      if (data.note) {
-        $(".commentSection").append("<b>Previous Comments:</b><br><span id='note-span'>" + data.note.body + "<button data-id='" + data.note._id + "' id='deletenote' class='btn btn-outline-dark btn-sm' data-dismiss='modal'>X</button>" + "<br><hr></span>");
+
+      for (var i=0; i  < data.note.length; i++){
+        $(".commentSection").append("<span id='note-span'>" + data.note[i].body + "<button data-id='" + data.note[i]._id + "' id='deletenote' class='btn btn-outline-dark btn-sm' data-dismiss='modal'>X</button>" + "<br><hr></span>");
       }
       $(".input").append("<textarea id='bodyinput' name='body'></textarea>");
       $(".input").append("<button data-id='" + data._id + "' class='btn btn-secondary btn-sm' style='margin-top:20px;'data-dismiss='modal'>Close</button>");
